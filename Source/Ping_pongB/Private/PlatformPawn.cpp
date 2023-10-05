@@ -35,13 +35,13 @@ void APlatformPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 #pragma once
 void APlatformPawn::MoveRight()
 {
-	CurrentVelocity.Y = 150 * YourMovementSpeed;
+	CurrentVelocity.Y = 250 * YourMovementSpeed;
 	FVector NewLocation = GetActorLocation() + (CurrentVelocity * GetWorld()->GetDeltaSeconds());
 	SetActorLocation(NewLocation);
 }
 void APlatformPawn::MoveLeft()
 {
-	CurrentVelocity.Y = -150 * YourMovementSpeed;
+	CurrentVelocity.Y = -250 * YourMovementSpeed;
 	FVector NewLocation = GetActorLocation() + (CurrentVelocity * GetWorld()->GetDeltaSeconds());
 	SetActorLocation(NewLocation);
 }
