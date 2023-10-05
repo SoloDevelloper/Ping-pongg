@@ -23,7 +23,6 @@ void APlatformPawn::BeginPlay()
 void APlatformPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input

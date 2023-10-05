@@ -2,22 +2,43 @@
 
 
 #include "MyGameModeBase.h"
+#include "Kismet/GameplayStatics.h"
 #include "MyPlayerController.h"
 
 AMyGameModeBase::AMyGameModeBase()
 {
-    // Установите классы игрока и мяча
     DefaultPawnClass = APlatformPawn::StaticClass();
-    // Создайте BP-класс для игрока
+
     PlayerControllerClass = AMyPlayerController::StaticClass();
-    // Создайте BP-класс для мяча
+
     bWaitingForPlayers = true;
+
 }
 
 void AMyGameModeBase::PostLogin(APlayerController* NewPlayer)
 {
     Super::PostLogin(NewPlayer);
+    if (NewPlayer && NewPlayer->IsLocalPlayerController())
+    {
+        AMyPlayerController* PlayerController = Cast<AMyPlayerController>(NewPlayer);
 
-    // Проверьте, сколько игроков подключено, и начните игру при подключении второго игрока
-    // Выведите уведомление на экран или в лог ожидания начала матча
+        if (PlayerController)
+        {
+            if (GetNumPlayers() < 2)
+            {
+                GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, TEXT("Wait for player"));
+            }
+        }
+    }
+    if (GetNumPlayers() >= 2)
+    {
+        bWaitingForPlayers = false;
+        FName ActorNameToFind = FName(TEXT("Ball"));
+        TArray<AActor*> FoundActors;
+        UGameplayStatics::GetAllActorsWithTag(GetWorld(), ActorNameToFind, FoundActors);
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("%d"), GetNumPlayers()));
+    }
+}
+bool AMyGameModeBase::getWaitingPlayer() {
+    return bWaitingForPlayers;
 }

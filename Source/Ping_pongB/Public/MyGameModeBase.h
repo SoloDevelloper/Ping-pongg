@@ -14,7 +14,9 @@ class PING_PONGB_API AMyGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	virtual void PostLogin(APlayerController* NewPlayer) override;
-
+public:
+	UFUNCTION(BlueprintCallable, Category = "MyCategory")
+	bool getWaitingPlayer();
 private:
 	bool bWaitingForPlayers;
 public:
