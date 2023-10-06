@@ -10,9 +10,8 @@ AMyGameModeBase::AMyGameModeBase()
     DefaultPawnClass = APlatformPawn::StaticClass();
 
     PlayerControllerClass = AMyPlayerController::StaticClass();
-
     bWaitingForPlayers = true;
-
+    allPawns = GetPawnsOnScene();
 }
 
 void AMyGameModeBase::PostLogin(APlayerController* NewPlayer)
@@ -30,15 +29,57 @@ void AMyGameModeBase::PostLogin(APlayerController* NewPlayer)
             }
         }
     }
+
     if (GetNumPlayers() >= 2)
     {
         bWaitingForPlayers = false;
         FName ActorNameToFind = FName(TEXT("Ball"));
         TArray<AActor*> FoundActors;
         UGameplayStatics::GetAllActorsWithTag(GetWorld(), ActorNameToFind, FoundActors);
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("%d"), GetNumPlayers()));
+        GetAllPlayerControllers();
+        //GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("%d"), GetNumPlayers()));
     }
+}
+TArray<APawn*> AMyGameModeBase::GetPawnsOnScene()
+{
+    TArray<AActor*> FoundActors;
+    TArray<APawn*> FoundPawns;
+    UGameplayStatics::GetAllActorsOfClass(GetWorld(), APawn::StaticClass(), FoundActors);
+
+    for (AActor* Actor : FoundActors)
+    {
+        APawn* Pawn = Cast<APawn>(Actor);
+        if (Pawn)
+        {
+            FoundPawns.Add(Pawn);
+        }
+    }
+    return FoundPawns;
 }
 bool AMyGameModeBase::getWaitingPlayer() {
     return bWaitingForPlayers;
 }
+void AMyGameModeBase::GetAllPlayerControllers() {
+
+        TArray<AActor*>  PlayerControllers;
+
+        UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerController::StaticClass(), PlayerControllers);
+        int i = 0;
+        for (AActor* PlayerController : PlayerControllers)
+        {
+            APlayerController* PlayerControllerr = Cast<APlayerController>(PlayerController);
+
+            if (PlayerControllerr)
+            {
+                PlayerControllerr->Possess(allPawns[i]);
+                i++;
+            }
+ 
+
+
+
+
+
+
+        }
+ }

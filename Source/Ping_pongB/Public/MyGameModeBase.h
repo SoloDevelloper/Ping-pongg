@@ -15,8 +15,15 @@ class PING_PONGB_API AMyGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 public:
+	UPROPERTY(EditDefaultsOnly, Category = "Server Settings")
+	bool IsServerOnly = true;
+	UPROPERTY(EditAnywhere, Category = "Gameplay")
+	AActor* BallActor;
 	UFUNCTION(BlueprintCallable, Category = "MyCategory")
 	bool getWaitingPlayer();
+	TArray<APawn*> allPawns;
+	TArray<APawn*> GetPawnsOnScene();
+	void GetAllPlayerControllers();
 private:
 	bool bWaitingForPlayers;
 public:
